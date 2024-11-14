@@ -8,6 +8,7 @@ from routes.home import home_bp
 
 load_dotenv('.env')
 
+
 def create_app() -> Flask:
     """Create a Flask application."""
     app = Flask(__name__)
@@ -22,6 +23,7 @@ def create_app() -> Flask:
     app.teardown_appcontext(shutdown_db_session)
 
     return app
+
 
 if __name__ == '__main__':
     app = create_app()

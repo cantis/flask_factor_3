@@ -9,7 +9,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker
 
 Base = declarative_base()
-DATABASE_URL = os.getenv('DATABASE_URL')
+DATABASE_URL: str = os.getenv('DATABASE_URL')
 engine = create_engine(url=DATABASE_URL, echo=True)
 
 
@@ -52,7 +52,7 @@ def get_db_session() -> scoped_session:
     return g.db_session
 
 
-def shutdown_db_session(exception=None) -> None:
+def shutdown_db_session(exception: Exception = None) -> None:
     """Shutdown the database session."""
     db_session = g.pop('db_session', None)
     if db_session is not None:
