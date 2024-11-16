@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Players{% endblock %}
+
+{% block content %}
+<h1>Players List</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Email</th>
+            <th>Name</th>
+            <th>Password Attempts</th>
+            <th>Reset Password</th>
+            <th>Is Active</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for player in players %}
+        <tr>
+            <td>{{ player.id }}</td>
+            <td>{{ player.email }}</td>
+            <td>{{ player.name }}</td>
+            <td>{{ player.password_attempts }}</td>
+            <td>{{ player.reset_password }}</td>
+            <td>{{ player.is_active }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
