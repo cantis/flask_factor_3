@@ -1,7 +1,7 @@
 """Database models."""
 
 import os
-from typing import Optional
+from contextlib import contextmanager
 
 from flask import g
 from sqlmodel import Field, Session, SQLModel, create_engine
@@ -14,7 +14,7 @@ def create_db() -> None:
     """Create the database."""
     SQLModel.metadata.create_all(engine)
 
-
+@contextmanager
 def get_session():
     """Get a database session."""
     with Session(engine) as session:
