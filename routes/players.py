@@ -1,6 +1,6 @@
 """Player routes blueprint."""
 
-from flask import Blueprint, jsonify, render_template, request
+from flask import Blueprint, jsonify, redirect, render_template, request, url_for
 
 from models import Player, get_session
 from services.player_service import PlayerService
@@ -15,14 +15,29 @@ def list_players() -> str:
         players = service.list_players()
         return render_template('players/list.html', players=players)
 
+@players_bp.route('/players/add', methods=['GET'])
+def add_player_form() -> str:
+    """Render the add player form."""
+    return render_template('players/add_player.html')
+
 @players_bp.route('/players', methods=['POST'])
 def add_player() -> str:
     """Add a new player."""
-    data = request.json
+    data = request.form
+    if data['password'] != data['confirm_password']:
+        return jsonify({'error': 'Passwords do not match'}), 400
+    player_data = {
+        'email': data['email'],
+        'name': data['name'],
+        'password': data['password'],
+        'password_attempts': 0,
+        'reset_password': False,
+        'is_active': True,
+    }
     with get_session() as session:
         service = PlayerService(session)
-        player = service.add_player(data)
-        return jsonify(player)
+        service.add_player(Player(**player_data))
+        return redirect(url_for('players.list_players'))
 
 @players_bp.route('/players/<int:player_id>', methods=['GET'])
 def get_player(player_id: int) -> str:

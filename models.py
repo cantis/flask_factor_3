@@ -26,7 +26,7 @@ class Player(SQLModel, table=True):
 
     id: int | None = Field(primary_key=True, index=True)
     email: str
-    passwor: str
+    password: str  # Fixed typo here
     name: str
     password_attempts: int
     reset_password: bool | None = False
