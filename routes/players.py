@@ -2,7 +2,7 @@
 
 from flask import Blueprint, jsonify, redirect, render_template, request, url_for
 from flask_wtf import FlaskForm
-from wtforms import PasswordField, StringField
+from wtforms import BooleanField, PasswordField, StringField
 from wtforms.validators import Email, InputRequired
 
 from models import Player, get_session
@@ -22,13 +22,13 @@ class AddPlayerForm(FlaskForm):
 class EditPlayerForm(FlaskForm):
     """Edit player form."""
 
-    email: str
-    name: str
-    current_password: str
-    new_password: str
-    password_attempts: int
-    reset_password: bool
-    is_active: bool
+    email = StringField('Email', validators=[InputRequired(), Email()])
+    name = StringField('Name', validators=[InputRequired()])
+    current_password = PasswordField('Current Password')
+    new_password = PasswordField('New Password')
+    password_attempts = StringField('Password Attempts', validators=[InputRequired()])
+    reset_password = BooleanField('Reset Password')
+    is_active = BooleanField('Active')
 
 
 @players_bp.get('/players')
@@ -76,17 +76,26 @@ def edit_player_form(player_id: int) -> str:
         player = service.get_player(player_id)
         if not player:
             return redirect(url_for('players.list_players'))
+
+        form.email.data = player.email
+        form.name.data = player.name
+        form.password_attempts.data = player.password_attempts
+        form.reset_password.data = player.reset_password
+        form.is_active.data = player.is_active
         return render_template('players/player_edit.html', form=form, player=player)
 
 
 @players_bp.post('/players/<int:player_id>')
 def edit_player(player_id: int) -> str:
     """Update a player by ID."""
-    if request.form.get('_method') == 'PUT':
-        data = request.form
+    form = EditPlayerForm()
+    if form.validate_on_submit():
+        data = form.data
         player_data = {
             'email': data['email'],
             'name': data['name'],
+            'current_password': data['current_password'],
+            'new_password': data['new_password'],
             'password_attempts': int(data['password_attempts']),
             'reset_password': 'reset_password' in data,
             'is_active': 'is_active' in data,

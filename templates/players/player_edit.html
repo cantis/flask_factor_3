@@ -5,7 +5,6 @@
 {% block content %}
 <h1>Edit Player</h1>
 <form action="{{ url_for('players.edit_player', player_id=player.id) }}" method="POST">
-    <input type="hidden" name="_method" value="put">
     {{ form.hidden_tag() }}
     <div class="form-group">
         <label for="email">Email:</label>
