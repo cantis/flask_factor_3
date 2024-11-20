@@ -28,6 +28,7 @@ class PlayerService:
 
     def add_player(self, player: Player) -> Player:
         """Add a new player."""
+        # TODO: Add PasswordHashing here!
         self.session.add(player)
         self.session.commit()
         self.session.refresh(player)

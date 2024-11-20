@@ -1,5 +1,7 @@
 """Application entry point."""
 
+import os
+
 from dotenv import load_dotenv
 from flask import Flask
 
@@ -12,6 +14,7 @@ load_dotenv('.env')
 def create_app() -> Flask:
     """Create a Flask application."""
     app = Flask(__name__)
+    app.secret_key = os.getenv('SECRET_KEY')
 
     # Create the database
     create_db()

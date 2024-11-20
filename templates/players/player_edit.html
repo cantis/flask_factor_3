@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Player{% endblock %}
+
+{% block content %}
+<h1>Edit Player</h1>
+<form action="{{ url_for('players.edit_player', player_id=player.id) }}" method="POST">
+    <input type="hidden" name="_method" value="put">
+    {{ form.hidden_tag() }}
+    <div class="form-group">
+        <label for="email">Email:</label>
+        {{ form.email(class="form-control", id="email", placeholder="Email", required="required") }}
+    </div>
+    <div class="form-group">
+        <label for="name">Name:</label>
+        {{ form.name(class="form-control", id="name", placeholder="Name", required="required") }}
+    </div>
+    <div class="form-group">
+        <label for="current_password">Current Password:</label>
+        {{ form.current_password(class="form-control", id="current_password", placeholder="Current Password") }}
+    </div>
+    <div class="form-group">
+        <label for="new_password">New Password:</label>
+        {{ form.new_password(class="form-control", id="new_password", placeholder="New Password") }}
+    </div>
+    <div class="form-group">
+        <label for="password_attempts">Password Attempts:</label>
+        {{ form.password_attempts(class="form-control", id="password_attempts", placeholder="Password Attempts") }}
+    </div>
+    <div class="form-check">
+        {{ form.reset_password(class="form-check-input", id="reset_password") }}
+        <label class="form-check-label" for="reset_password">Reset Password</label>
+    </div>
+    <div class="form-check">
+        {{ form.is_active(class="form-check-input", id="is_active") }}
+        <label class="form-check-label" for="is_active">Is Active</label>
+    </div>
+    <br>
+    <button type="submit" class="btn btn-primary">Update Player</button>
+    <a href="{{ url_for('players.list_players') }}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}
