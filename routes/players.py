@@ -1,6 +1,6 @@
 """Player routes blueprint."""
 
-from flask import Blueprint, jsonify, redirect, render_template, request, url_for
+from flask import Blueprint, jsonify, redirect, render_template, url_for
 from flask_wtf import FlaskForm
 from wtforms import BooleanField, PasswordField, StringField
 from wtforms.validators import Email, InputRequired
