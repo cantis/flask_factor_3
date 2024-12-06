@@ -54,7 +54,7 @@ class PlayerService:
 
     def delete_player(self, player_id: int) -> None:
         """Delete a player by ID."""
-        player = self.session.get(Player, player_id)
+        player = self.session.get(Player, player_id)  
         if not player:
             raise PlayerNotFoundError(player_id)
         self.session.delete(player)

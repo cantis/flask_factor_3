@@ -50,11 +50,14 @@ def add_player_form() -> str:
 def add_player() -> str:
     """Add a new player."""
     form = AddPlayerForm()
-    if form.validate_on_submit():
-        with get_session() as session:
-            service = PlayerService(session)
-            service.add_player(Player(**form.data))
-            return redirect(url_for('players.list_players'))
+    try:
+        if form.validate_on_submit():
+            with get_session() as session:
+                service = PlayerService(session)
+                service.add_player(Player(**form.data))
+                return redirect(url_for('players.list_players'))
+    except Exception as e:
+        print(f"Error validating form: {e}")
     return render_template('players/player_add.html', form=form)
 
 
@@ -89,21 +92,26 @@ def edit_player_form(player_id: int) -> str:
 def edit_player(player_id: int) -> str:
     """Update a player by ID."""
     form = EditPlayerForm()
-    if form.validate_on_submit():
-        data = form.data
-        player_data = {
-            'email': data['email'],
-            'name': data['name'],
-            'current_password': data['current_password'],
-            'new_password': data['new_password'],
-            'password_attempts': int(data['password_attempts']),
-            'reset_password': 'reset_password' in data,
-            'is_active': 'is_active' in data,
-        }
-        with get_session() as session:
-            service = PlayerService(session)
-            service.update_player(player_id, Player(**player_data))
-            return redirect(url_for('players.list_players'))
+    try:
+        if form.validate_on_submit():
+            data = form.data
+            player_data = {
+                'email': data['email'],
+                'name': data['name'],
+                'current_password': data['current_password'],
+                'new_password': data['new_password'],
+                'password_attempts': int(data['password_attempts']),
+                'reset_password': 'reset_password' in data,
+                'is_active': 'is_active' in data,
+            }
+            with get_session() as session:
+                service = PlayerService(session)
+                service.update_player(player_id, Player(**player_data))
+                return redirect(url_for('players.list_players'))
+        else:
+            print(f"Form errors: {form.errors}")
+    except Exception as e:
+        print(f"Error validating form: {e}")
     return jsonify({'error': 'Invalid request'}), 400
 
 
