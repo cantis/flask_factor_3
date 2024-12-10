@@ -5,3 +5,4 @@
 * keep the includes sorted per ruff style
 * Use arrange, act, assert pattern for tests
 * Add minimal docstrings for files, functions, and classes
+* Use the | syntax for optional fields in models

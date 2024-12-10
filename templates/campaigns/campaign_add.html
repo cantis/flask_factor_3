@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Add Campaign{% endblock %}
+
+{% block content %}
+<h1>Add a New Campaign</h1>
+<form method="post" action="/campaigns">
+    {{form.hidden_tag()}}
+    <div class="form-group">
+        <label for="name">Name:</label>
+        {{form.name(class="form-control", id="name", required="required")}}
+    </div>
+    <div class="form-check">
+        {{form.is_active(class="form-check-input", id="is_active")}}
+        <label class="form-check-label" for="is_active">Is Active</label>
+    </div>
+    <button type="submit" class="btn btn-primary">Add Campaign</button>
+</form>
+{% endblock %}
