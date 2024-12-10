@@ -2,21 +2,25 @@
 
 import os
 from contextlib import contextmanager
+from typing import Generator
 
 from sqlmodel import Field, Session, SQLModel, create_engine
 
-DATABASE_URL: str = os.getenv('DATABASE_URL')
-engine = create_engine(DATABASE_URL, connect_args={'check_same_thread': False})
 
-
-def create_db() -> None:
+def create_db(database_url: str = None) -> None:
     """Create the database."""
+    if database_url is None:
+        database_url = os.getenv('DATABASE_URL')
+    engine = create_engine(database_url)
     SQLModel.metadata.create_all(engine)
 
 
 @contextmanager
-def get_session():
+def get_session(database_url: str = None) -> Generator[Session, None, None]:
     """Get a database session."""
+    if database_url is None:
+        database_url = os.getenv('DATABASE_URL')
+    engine = create_engine(database_url)
     with Session(engine) as session:
         yield session
 
