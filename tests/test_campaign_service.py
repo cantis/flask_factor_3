@@ -21,11 +21,13 @@ def test_add_campaign(service: CampaignService, session):
     campaign = Campaign(name="Test Campaign", is_active=True)
 
     # Act
-    service.add_campaign(campaign)
+    result = service.add_campaign(campaign)
 
     # Assert
     session.add.assert_called_once_with(campaign)
     session.commit.assert_called_once()
+    assert result.id is not None 
+    assert result.is_active is True
 
 def test_get_campaign(service: CampaignService, session):
     """Test getting a campaign."""
