@@ -16,7 +16,7 @@ load_dotenv('.env')
 def create_app() -> Flask:
     """Create a Flask application."""
     app = Flask(__name__)
-    app.secret_key = os.getenv('SECRET_KEY')
+    app.secret_key = os.getenv('SECRET_KEY', 'very_secret_key')
 
     # Create the database
     create_db()

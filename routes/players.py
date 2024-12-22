@@ -26,7 +26,6 @@ class EditPlayerForm(FlaskForm):
     name = StringField('Name', validators=[InputRequired()])
     current_password = PasswordField('Current Password')
     new_password = PasswordField('New Password')
-    password_attempts = StringField('Password Attempts', validators=[InputRequired()])
     reset_password = BooleanField('Reset Password')
     is_active = BooleanField('Active')
 
@@ -82,7 +81,6 @@ def edit_player_form(player_id: int) -> str:
 
         form.email.data = player.email
         form.name.data = player.name
-        form.password_attempts.data = player.password_attempts
         form.reset_password.data = player.reset_password
         form.is_active.data = player.is_active
         return render_template('players/player_edit.html', form=form, player=player)
@@ -94,18 +92,19 @@ def edit_player(player_id: int) -> str:
     form = EditPlayerForm()
     try:
         if form.validate_on_submit():
-            data = form.data
-            player_data = {
-                'email': data['email'],
-                'name': data['name'],
-                'current_password': data['current_password'],
-                'new_password': data['new_password'],
-                'password_attempts': int(data['password_attempts']),
-                'reset_password': 'reset_password' in data,
-                'is_active': 'is_active' in data,
-            }
             with get_session() as session:
                 service = PlayerService(session)
+                existing_player = service.get_player(player_id)
+                data = form.data
+                player_data = {
+                    'email': data['email'],
+                    'name': data['name'],
+                    'current_password': data['current_password'],
+                    'new_password': data['new_password'],
+                    'password_attempts': existing_player.password_attempts,  # Preserve existing value
+                    'reset_password': data['reset_password'],
+                    'is_active': data['is_active'],
+                }
                 service.update_player(player_id, Player(**player_data))
                 return redirect(url_for('players.list_players'))
         else:

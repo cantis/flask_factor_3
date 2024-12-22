@@ -10,26 +10,26 @@
         <tr>
             <th>ID</th>
             <th>Character Name</th>
-            <th>Player ID</th>
+            <th>Player</th>
+            <th>Campaign</th>
             <th>Is Alive</th>
-            <th>Campaign ID</th>
             <th>Actions</th>
         </tr>
     </thead>
     <tbody>
         {% for character in characters %}
         <tr>
-            <td>{{ character.id }}</td>
-            <td>{{ character.character_name }}</td>
-            <td>{{ character.player_id }}</td>
-            <td>{{ character.is_alive }}</td>
-            <td>{{ character.campaign_id }}</td>
+            <td>{{ character.Character.id }}</td>
+            <td>{{ character.Character.character_name }}</td>
+            <td>{{ character.player_name }}</td>
+            <td>{{ character.campaign_name }}</td>
+            <td>{{ character.Character.is_alive }}</td>
             <td>
-                <a href="/characters/{{ character.id }}/edit" class="link">
+                <a href="/characters/{{ character.Character.id }}/edit" class="link">
                     <i class="fas fa-pencil-alt"></i>
                 </a>
                 &nbsp; &nbsp;
-                <a href="#" onclick="confirmDelete({{ character.id }})" class="link">
+                <a href="#" onclick="confirmDelete({{ character.Character.id }})" class="link">
                     <i class="fas fa-trash-alt"></i>
                 </a>
             </td>

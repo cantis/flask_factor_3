@@ -4,20 +4,26 @@
 
 {% block content %}
 <h1>Add a New Character</h1>
-<form method="post" action="/characters">
+<form method="post" action="{{ url_for('characters.add_character') }}">
     {{ form.hidden_tag() }}
     <div class="form-group">
-        <label for="name">Name:</label>
-        {{ form.name(class="form-control", id="name", required="required") }}
+        <label for="character_name">Character Name:</label>
+        {{ form.character_name(class="form-control", id="character_name", required="required") }}
     </div>
     <div class="form-group">
-        <label for="class">Class:</label>
-        {{ form.class_(class="form-control", id="class", required="required") }}
+        <label for="player_id">Player:</label>
+        {{ form.player_id(class="form-control", id="player_id", required="required") }}
     </div>
     <div class="form-group">
-        <label for="level">Level:</label>
-        {{ form.level(class="form-control", id="level", required="required") }}
+        <label for="campaign_id">Campaign:</label>
+        {{ form.campaign_id(class="form-control", id="campaign_id", required="required") }}
     </div>
+    <div class="form-check">
+        {{ form.is_alive(class="form-check-input", id="is_alive") }}
+        <label class="form-check-label" for="is_alive">Is Alive</label>
+    </div>
+    <br>
     <button type="submit" class="btn btn-primary">Add Character</button>
+    <a href="{{ url_for('characters.list_characters') }}" class="btn btn-secondary">Cancel</a>
 </form>
 {% endblock %}

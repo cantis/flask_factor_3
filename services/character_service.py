@@ -2,7 +2,7 @@
 
 from sqlmodel import Session, select
 
-from models import Character
+from models import Campaign, Character, Player
 
 
 class CharacterNotFoundError(Exception):
@@ -23,8 +23,14 @@ class CharacterService:
         self.session = session
 
     def list_characters(self) -> list[Character]:
-        """List all characters."""
-        return self.session.exec(select(Character)).all()
+        """List all characters with player and campaign info."""
+        statement = (
+            select(Character, Player.name.label("player_name"), Campaign.name.label("campaign_name"))
+            .join(Player, Character.player_id == Player.id)
+            .join(Campaign, Character.campaign_id == Campaign.id)
+        )
+        results = self.session.exec(statement).all()
+        return results
 
     def list_characters_in_campaign(self, campaign_id: int) -> list[Character]:
         """List all characters in a campaign."""

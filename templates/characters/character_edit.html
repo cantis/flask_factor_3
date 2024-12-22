@@ -8,19 +8,19 @@
     {{ form.hidden_tag() }}
     <div class="form-group">
         <label for="character_name">Character Name:</label>
-        {{ form.character_name(class="form-control", id="character_name", placeholder="Character Name", required="required") }}
+        {{ form.character_name(class="form-control", id="character_name", required="required") }}
     </div>
     <div class="form-group">
-        <label for="player_id">Player ID:</label>
-        {{ form.player_id(class="form-control", id="player_id", placeholder="Player ID", required="required") }}
+        <label for="player_id">Player:</label>
+        {{ form.player_id(class="form-control", id="player_id", required="required") }}
     </div>
     <div class="form-check">
         {{ form.is_alive(class="form-check-input", id="is_alive") }}
         <label class="form-check-label" for="is_alive">Is Alive</label>
     </div>
     <div class="form-group">
-        <label for="campaign_id">Campaign ID:</label>
-        {{ form.campaign_id(class="form-control", id="campaign_id", placeholder="Campaign ID", required="required") }}
+        <label for="campaign_id">Campaign:</label>
+        {{ form.campaign_id(class="form-control", id="campaign_id", required="required") }}
     </div>
     <br>
     <button type="submit" class="btn btn-primary">Update Character</button>
