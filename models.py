@@ -2,58 +2,56 @@
 
 import os
 from contextlib import contextmanager
+from typing import Generator, List, Optional
 
-from flask import g
-from sqlalchemy import Boolean, Column, Integer, String, create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import scoped_session, sessionmaker
-
-Base = declarative_base()
-DATABASE_URL = os.getenv('DATABASE_URL')
-engine = create_engine(url=DATABASE_URL, echo=True)
+from sqlmodel import Field, Session, SQLModel, create_engine, Relationship
 
 
-class Player(Base):
-    """Player model."""
-
-    __tablename__ = 'players'
-    id = Column(Integer, primary_key=True)
-    email = Column(String, unique=True, nullable=False)
-    password = Column(String, nullable=False)
-    name = Column(String, nullable=False)
-    password_attempts = Column(Integer, default=0)
-    reset_password = Column(Boolean, default=False)
-    is_active = Column(Boolean, default=True)
-
-
-def create_db() -> None:
+def create_db(database_url: str = None) -> None:
     """Create the database."""
-    Base.metadata.create_all(engine)
+    if database_url is None:
+        database_url = os.getenv('DATABASE_URL')
+    engine = create_engine(database_url)
+    SQLModel.metadata.create_all(engine)
 
 
 @contextmanager
-def get_session() -> scoped_session:
-    """Provide a transactional scope around a series of operations."""
-    session = scoped_session(sessionmaker(bind=engine))
-    try:
+def get_session(database_url: str = None) -> Generator[Session, None, None]:
+    """Get a database session."""
+    if database_url is None:
+        database_url = os.getenv('DATABASE_URL')
+    engine = create_engine(database_url)
+    with Session(engine) as session:
         yield session
-        session.commit()
-    except:
-        session.rollback()
-        raise
-    finally:
-        session.remove()
 
 
-def get_db_session() -> scoped_session:
-    """Get a scoped session."""
-    if 'db_session' not in g:
-        g.db_session = scoped_session(sessionmaker(bind=engine))
-    return g.db_session
+class Campaign(SQLModel, table=True):
+    """Campaign model."""
+    id: int | None = Field(default=None, primary_key=True)
+    name: str
+    is_active: bool = True
+    characters: List["Character"] = Relationship(back_populates="campaign")
 
 
-def shutdown_db_session(exception=None) -> None:
-    """Shutdown the database session."""
-    db_session = g.pop('db_session', None)
-    if db_session is not None:
-        db_session.remove()
+class Character(SQLModel, table=True):
+    """Character model."""
+    id: int | None = Field(default=None, primary_key=True)
+    character_name: str
+    player_id: int = Field(foreign_key="player.id")
+    is_alive: bool = True
+    campaign_id: int = Field(foreign_key="campaign.id")
+    player: "Player" = Relationship(back_populates="characters")
+    campaign: "Campaign" = Relationship(back_populates="characters")
+
+
+class Player(SQLModel, table=True):
+    """Player model."""
+
+    id: int | None = Field(primary_key=True, index=True)
+    email: str
+    password: str
+    name: str
+    password_attempts: int | None = 0
+    reset_password: bool | None = False
+    is_active: bool | None = True
+    characters: List["Character"] = Relationship(back_populates="player")

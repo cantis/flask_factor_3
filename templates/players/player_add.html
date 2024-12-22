@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Add Player{% endblock %}
+
+{% block content %}
+<h1>Add a New Player</h1>
+<form method="post" action="/players" onsubmit="return validatePassword()">
+    {{form.hidden_tag()}}
+    <div class="form-group">
+        <label for="email">Email:</label>
+        {{form.email(class="form-control", id="email", required="required")}}
+    </div>
+    <div class="form-group">
+        <label for="name">Name:</label>
+        {{form.name(class="form-control", id="name", required="required")}}
+    </div>
+    <div class="form-group">
+        <label for="password">Password:</label>
+        {{form.password(class="form-control", id="password", required="required")}}
+    </div>
+    <div class="form-group">
+        <label for="confirm_password">Confirm Password:</label>
+        <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Add Player</button>
+</form>
+
+<script>
+function validatePassword() {
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirm_password').value;
+    if (password !== confirmPassword) {
+        alert('Passwords do not match.');
+        return false;
+    }
+    return true;
+}
+</script>
+{% endblock %}
